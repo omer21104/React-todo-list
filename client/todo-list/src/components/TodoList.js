@@ -1,79 +1,96 @@
-
-import * as React from 'react';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import Checkbox from '@mui/material/Checkbox';
-import IconButton from '@mui/material/IconButton';
-import CommentIcon from '@mui/icons-material/Comment';
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
+import * as React from "react";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import Checkbox from "@mui/material/Checkbox";
+import IconButton from "@mui/material/IconButton";
+import CommentIcon from "@mui/icons-material/Comment";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
+import { useState } from "react";
+import AddItemBox from "./AddItemBox";
 
 export default function TodoList() {
-    const [checked, setChecked] = React.useState([]);
+  const [tasks, setTasks] = useState([]);
+  const [isAddToggled, setIsAddToggled] = useState(false);
 
-    const handleToggle = (value) => () => {
-        const currentIndex = checked.indexOf(value);
-        const newChecked = [...checked];
+  const handleToggle = (value) => () => {
+    const currentIndex = tasks.indexOf(value);
+    console.log(currentIndex);
+    const newTasks = [...tasks];
 
-        if (currentIndex === -1) {
-            newChecked.push(value);
-        } else {
-            newChecked.splice(currentIndex, 1);
-        }
-
-        setChecked(newChecked);
-    };
-
-    const handleAddClick = () => {
-        console.log('add clicked')
+    if (currentIndex === -1) {
+      console.log("????");
+    } else {
+      newTasks[currentIndex].checked = !newTasks[currentIndex].checked;
     }
 
-    const handleRemoveClick = () => {
-        console.log('remove clicked')
-    }
+    setTasks(newTasks);
+  };
 
-    return (
-        <div>
-            <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-                {[0, 1, 2, 3, 4, 5].map((value) => {
-                    const labelId = `checkbox-list-label-${value}`;
+  const handleAddClick = () => {
+    setIsAddToggled(!isAddToggled);
+    console.log("add clicked");
+  };
 
-                    return (
-                        <ListItem
-                            key={value}
-                            secondaryAction={
-                                <IconButton edge="end" aria-label="comments">
-                                    <CommentIcon />
-                                </IconButton>
-                            }
-                            disablePadding
-                        >
-                            <ListItemButton role={undefined} onClick={handleToggle(value)} dense>
-                                <ListItemIcon>
-                                    <Checkbox
-                                        edge="start"
-                                        checked={checked.indexOf(value) !== -1}
-                                        tabIndex={-1}
-                                        disableRipple
-                                        inputProps={{ 'aria-labelledby': labelId }}
-                                    />
-                                </ListItemIcon>
-                                <ListItemText id={labelId} primary={`Line item ${value + 1}`} />
-                            </ListItemButton>
-                        </ListItem>
-                    );
-                })}
-            </List>
-            <div>
-                <Stack spacing={2} direction="row">
-                    <Button variant={"contained"} onClick={handleAddClick}>Add new item</Button>
-                    <Button variant={"contained"} onClick={handleRemoveClick}>Remove selected</Button>
-                </Stack>
-            </div>
-        </div>
-    );
+  const handleRemoveClick = () => {
+    setTasks(tasks.filter((task) => task.checked === false));
+  };
+
+  const addNewItem = (item) => {
+    setTasks([...tasks, item]);
+  };
+
+  return (
+    <div className={"todolist-container"}>
+      <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
+        {tasks.map((task) => {
+          const { creationTime, text } = task;
+          const labelId = `checkbox-list-label-${text}`;
+
+          return (
+            <ListItem
+              key={creationTime}
+              secondaryAction={
+                <IconButton edge="end" aria-label="comments">
+                  <CommentIcon />
+                </IconButton>
+              }
+              disablePadding
+            >
+              <ListItemButton
+                role={undefined}
+                onClick={handleToggle(task)}
+                dense
+              >
+                <ListItemIcon>
+                  <Checkbox
+                    edge="start"
+                    checked={task.checked}
+                    tabIndex={-1}
+                    disableRipple
+                    inputProps={{ "aria-labelledby": labelId }}
+                  />
+                </ListItemIcon>
+                <ListItemText id={labelId} primary={text} />
+              </ListItemButton>
+            </ListItem>
+          );
+        })}
+      </List>
+      <div>
+        <Stack spacing={2} direction="row">
+          <Button variant={"contained"} onClick={handleAddClick}>
+            Add new item
+          </Button>
+          <Button variant={"contained"} onClick={handleRemoveClick}>
+            Remove selected
+          </Button>
+        </Stack>
+        {isAddToggled && <AddItemBox addCallback={addNewItem} />}
+      </div>
+    </div>
+  );
 }
-
