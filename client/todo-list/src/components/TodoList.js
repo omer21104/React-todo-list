@@ -9,16 +9,42 @@ import IconButton from "@mui/material/IconButton";
 import CommentIcon from "@mui/icons-material/Comment";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddItemBox from "./AddItemBox";
+import apiService from "../api";
 
 export default function TodoList() {
   const [tasks, setTasks] = useState([]);
   const [isAddToggled, setIsAddToggled] = useState(false);
 
+  useEffect(() => {
+    apiService.FetchDataService.get_table_data().then((response) => {
+      let data = JSON.parse(response.data);
+      let fields = data.map((item) => {
+        const { fields } = item;
+        return fields;
+      });
+
+      let list = fields.map((field) => {
+        const { list_item_title } = field;
+        return list_item_title;
+      });
+
+      let tasks = [];
+      for (let i = 0; i < list.length; i++) {
+        tasks.push({
+          key: i,
+          text: list[i],
+          checked: false,
+        });
+      }
+
+      setTasks(tasks);
+    });
+  }, []);
+
   const handleToggle = (value) => () => {
     const currentIndex = tasks.indexOf(value);
-    console.log(currentIndex);
     const newTasks = [...tasks];
 
     if (currentIndex === -1) {
@@ -40,6 +66,10 @@ export default function TodoList() {
   };
 
   const addNewItem = (item) => {
+    apiService.PersistDataService.persist_list_item(item.text).then(
+      (response) => response.data
+    );
+
     setTasks([...tasks, item]);
   };
 
@@ -47,12 +77,12 @@ export default function TodoList() {
     <div className={"todolist-container"}>
       <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
         {tasks.map((task) => {
-          const { creationTime, text } = task;
+          const { key, text } = task;
           const labelId = `checkbox-list-label-${text}`;
 
           return (
             <ListItem
-              key={creationTime}
+              key={key}
               secondaryAction={
                 <IconButton edge="end" aria-label="comments">
                   <CommentIcon />

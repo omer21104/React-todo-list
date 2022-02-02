@@ -15,7 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-
+from . import views
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/test/get_table_data/', views.get_table_data),
+    path('api/test/persist_list_item', views.persist_list_item),
 ]
