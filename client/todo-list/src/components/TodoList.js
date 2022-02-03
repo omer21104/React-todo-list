@@ -5,13 +5,12 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Checkbox from "@mui/material/Checkbox";
-import IconButton from "@mui/material/IconButton";
-import CommentIcon from "@mui/icons-material/Comment";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import { useEffect, useState } from "react";
 import AddItemBox from "./AddItemBox";
 import apiService from "../api";
+import parseTodoListData from "../utils/ListParser";
 
 export default function TodoList() {
   const [tasks, setTasks] = useState([]);
@@ -19,26 +18,7 @@ export default function TodoList() {
 
   useEffect(() => {
     apiService.FetchDataService.get_table_data().then((response) => {
-      let data = JSON.parse(response.data);
-      let fields = data.map((item) => {
-        const { fields } = item;
-        return fields;
-      });
-
-      let list = fields.map((field) => {
-        const { list_item_title } = field;
-        return list_item_title;
-      });
-
-      let tasks = [];
-      for (let i = 0; i < list.length; i++) {
-        tasks.push({
-          key: i,
-          text: list[i],
-          checked: false,
-        });
-      }
-
+      let tasks = parseTodoListData(response);
       setTasks(tasks);
     });
   }, []);
@@ -58,7 +38,6 @@ export default function TodoList() {
 
   const handleAddClick = () => {
     setIsAddToggled(!isAddToggled);
-    console.log("add clicked");
   };
 
   const handleRemoveClick = () => {
@@ -75,21 +54,13 @@ export default function TodoList() {
 
   return (
     <div className={"todolist-container"}>
-      <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
+      <List sx={{ width: "100%", maxWidth: 360 }}>
         {tasks.map((task) => {
-          const { key, text } = task;
+          const { id, text } = task;
           const labelId = `checkbox-list-label-${text}`;
 
           return (
-            <ListItem
-              key={key}
-              secondaryAction={
-                <IconButton edge="end" aria-label="comments">
-                  <CommentIcon />
-                </IconButton>
-              }
-              disablePadding
-            >
+            <ListItem key={id} disablePadding>
               <ListItemButton
                 role={undefined}
                 onClick={handleToggle(task)}
