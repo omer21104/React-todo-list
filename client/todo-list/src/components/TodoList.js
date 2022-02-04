@@ -42,10 +42,15 @@ export default function TodoList() {
 
   const handleRemoveClick = () => {
     setTasks(tasks.filter((task) => task.checked === false));
+
+    // testing delete functionality
+    apiService.DeleteDataService.delete_list_item("omer").then(
+      (response) => response.data
+    );
   };
 
   const addNewItem = (item) => {
-    apiService.PersistDataService.persist_list_item(item.text).then(
+    apiService.PersistDataService.persist_list_item(item).then(
       (response) => response.data
     );
 
@@ -56,8 +61,8 @@ export default function TodoList() {
     <div className={"todolist-container"}>
       <List sx={{ width: "100%", maxWidth: 360 }}>
         {tasks.map((task) => {
-          const { id, text } = task;
-          const labelId = `checkbox-list-label-${text}`;
+          const { id, list_item_title, checked } = task;
+          const labelId = `checkbox-list-label-${list_item_title}`;
 
           return (
             <ListItem key={id} disablePadding>
@@ -69,13 +74,13 @@ export default function TodoList() {
                 <ListItemIcon>
                   <Checkbox
                     edge="start"
-                    checked={task.checked}
+                    checked={checked}
                     tabIndex={-1}
                     disableRipple
                     inputProps={{ "aria-labelledby": labelId }}
                   />
                 </ListItemIcon>
-                <ListItemText id={labelId} primary={text} />
+                <ListItemText id={labelId} primary={list_item_title} />
               </ListItemButton>
             </ListItem>
           );

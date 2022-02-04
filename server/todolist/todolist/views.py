@@ -5,20 +5,36 @@ from rest_framework.response import Response
 from .models import TodoListItem
 from django.core import serializers
 
+from .utils import utils
+
+
+@api_view(['GET', 'POST', 'DELETE'])
+def test(request):
+    if request.method == 'POST':
+        new_list_item_data = request.data
+        utils.persist_new_list_item(new_list_item_data)
+        return Response(status=status.HTTP_200_OK)
+
+    elif request.method == 'GET':
+        obj = TodoListItem.objects.all()
+        data = serializers.serialize("json", obj, fields="list_item_title")
+        return Response(data, status=status.HTTP_200_OK)
+
+    return Response(status=status.HTTP_200_OK)
+
 
 @api_view(['GET'])
 @renderer_classes([JSONRenderer])
 def get_table_data(request):
     obj = TodoListItem.objects.all()
-    data = serializers.serialize("json", obj, fields="list_item_title")
+    data = serializers.serialize("json", obj, fields=('checked','list_item_title'))
     return Response(data, status=status.HTTP_200_OK)
 
 
-@api_view(['POST'])
+@api_view(['DELETE'])
 @renderer_classes([JSONRenderer])
 def persist_list_item(request):
-    data = request.data
-    new_list_item = TodoListItem(list_item_title=data)
-    new_list_item.save()
+    text = request.data
+    TodoListItem.objects.filter(list_item_title=text).delete()
 
     return Response(status=status.HTTP_200_OK)

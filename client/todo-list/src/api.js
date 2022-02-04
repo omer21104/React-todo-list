@@ -16,13 +16,21 @@ class FetchDataService {
 }
 
 class PersistDataService {
-  static persist_list_item(text) {
+  static persist_list_item(item) {
     return $axios
-      .post(url + "/api/test/persist_list_item", text)
+      .post(url + "/api/test/", item)
       .then((response) => response.data);
   }
 }
 
-const apiService = { FetchDataService, PersistDataService };
+class DeleteDataService {
+  static delete_list_item(entryTitle) {
+    return $axios
+      .delete(url + "/api/test/persist_list_item", { data: entryTitle })
+      .then((response) => response.data);
+  }
+}
+
+const apiService = { FetchDataService, PersistDataService, DeleteDataService };
 
 export default apiService;
