@@ -5,20 +5,26 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Checkbox from "@mui/material/Checkbox";
-import IconButton from "@mui/material/IconButton";
-import CommentIcon from "@mui/icons-material/Comment";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddItemBox from "./AddItemBox";
+import apiService from "../api";
+import parseTodoListData from "../utils/ListParser";
 
 export default function TodoList() {
   const [tasks, setTasks] = useState([]);
   const [isAddToggled, setIsAddToggled] = useState(false);
 
+  useEffect(() => {
+    apiService.FetchDataService.get_table_data().then((response) => {
+      let tasks = parseTodoListData(response);
+      setTasks(tasks);
+    });
+  }, []);
+
   const handleToggle = (value) => () => {
     const currentIndex = tasks.indexOf(value);
-    console.log(currentIndex);
     const newTasks = [...tasks];
 
     if (currentIndex === -1) {
@@ -32,34 +38,34 @@ export default function TodoList() {
 
   const handleAddClick = () => {
     setIsAddToggled(!isAddToggled);
-    console.log("add clicked");
   };
 
   const handleRemoveClick = () => {
     setTasks(tasks.filter((task) => task.checked === false));
+
+    // testing delete functionality
+    apiService.DeleteDataService.delete_list_item("omer").then(
+      (response) => response.data
+    );
   };
 
   const addNewItem = (item) => {
+    apiService.PersistDataService.persist_list_item(item).then(
+      (response) => response.data
+    );
+
     setTasks([...tasks, item]);
   };
 
   return (
     <div className={"todolist-container"}>
-      <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
+      <List sx={{ width: "100%", maxWidth: 360 }}>
         {tasks.map((task) => {
-          const { creationTime, text } = task;
-          const labelId = `checkbox-list-label-${text}`;
+          const { id, list_item_title, checked } = task;
+          const labelId = `checkbox-list-label-${list_item_title}`;
 
           return (
-            <ListItem
-              key={creationTime}
-              secondaryAction={
-                <IconButton edge="end" aria-label="comments">
-                  <CommentIcon />
-                </IconButton>
-              }
-              disablePadding
-            >
+            <ListItem key={id} disablePadding>
               <ListItemButton
                 role={undefined}
                 onClick={handleToggle(task)}
@@ -68,13 +74,13 @@ export default function TodoList() {
                 <ListItemIcon>
                   <Checkbox
                     edge="start"
-                    checked={task.checked}
+                    checked={checked}
                     tabIndex={-1}
                     disableRipple
                     inputProps={{ "aria-labelledby": labelId }}
                   />
                 </ListItemIcon>
-                <ListItemText id={labelId} primary={text} />
+                <ListItemText id={labelId} primary={list_item_title} />
               </ListItemButton>
             </ListItem>
           );

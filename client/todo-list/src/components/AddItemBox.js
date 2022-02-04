@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Button from "@mui/material/Button";
+import { v4 as uuidv4 } from "uuid";
 
 const AddItemBox = (props) => {
   const { addCallback } = props;
@@ -11,8 +12,8 @@ const AddItemBox = (props) => {
 
   const handleClick = () => {
     const datum = {
-      creationTime: new Date().getTime().toString(),
-      text: listItemText,
+      id: uuidv4(),
+      list_item_title: listItemText,
       checked: false,
     };
     addCallback(datum);
