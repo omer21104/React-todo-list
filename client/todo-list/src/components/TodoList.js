@@ -12,12 +12,14 @@ import AddItemBox from "./AddItemBox";
 import apiService from "../api";
 import parseTodoListData from "../utils/ListParser";
 
-export default function TodoList() {
+export default function TodoList(props) {
+  const { listName } = props;
+
   const [tasks, setTasks] = useState([]);
-  const [isAddToggled, setIsAddToggled] = useState(false);
+  const [isAddItemBoxToggled, setIsAddItemBoxToggled] = useState(false);
 
   useEffect(() => {
-    apiService.FetchDataService.get_table_data().then((response) => {
+    apiService.FetchDataService.get_table_data(listName).then((response) => {
       let tasks = parseTodoListData(response);
       setTasks(tasks);
     });
@@ -37,7 +39,7 @@ export default function TodoList() {
   };
 
   const handleAddClick = () => {
-    setIsAddToggled(!isAddToggled);
+    setIsAddItemBoxToggled(!isAddItemBoxToggled);
   };
 
   const handleRemoveClick = () => {
@@ -49,7 +51,8 @@ export default function TodoList() {
     );
   };
 
-  const addNewItem = (item) => {
+  const addNewItemCallback = (item) => {
+    item = { ...item, list_name: listName };
     apiService.PersistDataService.persist_list_item(item).then(
       (response) => response.data
     );
@@ -95,7 +98,7 @@ export default function TodoList() {
             Remove selected
           </Button>
         </Stack>
-        {isAddToggled && <AddItemBox addCallback={addNewItem} />}
+        {isAddItemBoxToggled && <AddItemBox addCallback={addNewItemCallback} />}
       </div>
     </div>
   );

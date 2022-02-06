@@ -8,10 +8,12 @@ const $axios = Axios.create({
 const url = "http://127.0.0.1:8000";
 
 class FetchDataService {
-  static get_table_data() {
-    return $axios.get(url + "/api/test/get_table_data").then((response) => {
-      return response;
-    });
+  static get_table_data(listName) {
+    return $axios
+      .get(url + "/api/test/get_table_data", { params: { listName } })
+      .then((response) => {
+        return response;
+      });
   }
 }
 
