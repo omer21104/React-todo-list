@@ -7,7 +7,7 @@ function App() {
     <div className="App">
       <h1>Todolist:</h1>
       <main>
-        <TodoList />
+        <TodoList listName={"test"} />
       </main>
       <Sidebar />
     </div>

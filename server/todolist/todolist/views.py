@@ -26,7 +26,8 @@ def test(request):
 @api_view(['GET'])
 @renderer_classes([JSONRenderer])
 def get_table_data(request):
-    obj = TodoListItem.objects.all()
+    list_name = request.GET.get('listName')
+    obj = TodoListItem.objects.filter(associated_list=list_name)
     data = serializers.serialize("json", obj, fields=('checked','list_item_title'))
     return Response(data, status=status.HTTP_200_OK)
 
