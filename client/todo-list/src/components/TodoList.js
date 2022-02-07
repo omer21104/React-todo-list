@@ -27,17 +27,21 @@ export default function TodoList(props) {
     );
   }, [activeListName]);
 
-  const handleToggle = (value) => () => {
+  const handleListItemChecked = (value) => () => {
     const currentIndex = tasks.indexOf(value);
     const newTasks = [...tasks];
 
     if (currentIndex === -1) {
-      console.log("????");
-    } else {
-      newTasks[currentIndex].checked = !newTasks[currentIndex].checked;
+      return "error!";
     }
 
+    newTasks[currentIndex].checked = !newTasks[currentIndex].checked;
     setTasks(newTasks);
+
+    // signal DB that a listItem's checked field has changed
+    apiService.UpdateDataService.update_checked_item(value.id).then(
+      (response) => response
+    );
   };
 
   const handleAddClick = () => {
@@ -83,7 +87,7 @@ export default function TodoList(props) {
             <ListItem key={id} disablePadding>
               <ListItemButton
                 role={undefined}
-                onClick={handleToggle(task)}
+                onClick={handleListItemChecked(task)}
                 dense
               >
                 <ListItemIcon>
