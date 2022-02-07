@@ -56,8 +56,8 @@ def get_lists(request):
 
 @api_view(['DELETE'])
 @renderer_classes([JSONRenderer])
-def persist_list_item(request):
-    text = request.data
-    TodoListItem.objects.filter(list_item_title=text).delete()
+def delete_list_items(request):
+    items_to_delete = request.data
+    TodoListItem.objects.filter(id__in=items_to_delete).delete()
 
     return Response(status=status.HTTP_200_OK)

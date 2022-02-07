@@ -36,9 +36,9 @@ class PersistDataService {
 }
 
 class DeleteDataService {
-  static delete_list_item(entryTitle) {
+  static delete_list_items(items) {
     return $axios
-      .delete(url + "/api/test/persist_list_item", { data: entryTitle })
+      .delete(url + "/api/test/delete_list_items", { data: items })
       .then((response) => response.data);
   }
 }
