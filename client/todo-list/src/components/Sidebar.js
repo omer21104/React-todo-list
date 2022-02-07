@@ -14,7 +14,6 @@ const Sidebar = (props) => {
   const [isAddNewListToggled, setIsAddNewListToggled] = useState(false);
 
   useEffect(() => {
-    console.log(`hi`);
     apiService.FetchDataService.get_lists().then((response) => {
       setLists(parseListNames(response));
     });

@@ -45,10 +45,20 @@ export default function TodoList(props) {
   };
 
   const handleRemoveClick = () => {
-    setTasks(tasks.filter((task) => task.checked === false));
+    // split tasks into checked and unchecked tasks
+    let checkedTasks = [];
+    let uncheckedTasks = [];
+    tasks.forEach((task) =>
+      (task.checked ? checkedTasks : uncheckedTasks).push(task)
+    );
 
-    // testing delete functionality
-    apiService.DeleteDataService.delete_list_item("omer").then(
+    // send only the id's to backend
+    const selectedTasksIds = checkedTasks.map((task) => {
+      return task.id;
+    });
+    setTasks(uncheckedTasks);
+
+    apiService.DeleteDataService.delete_list_items(selectedTasksIds).then(
       (response) => response.data
     );
   };
