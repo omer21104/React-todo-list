@@ -13,7 +13,6 @@ class TodoListItem(models.Model):
 
 class Lists(models.Model):
     list_name = models.CharField(max_length=100)
-    list_ref = models.ForeignKey('TodoListItem', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.list_name

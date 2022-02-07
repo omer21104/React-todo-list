@@ -10,20 +10,22 @@ import Stack from "@mui/material/Stack";
 import { useEffect, useState } from "react";
 import AddItemBox from "./AddItemBox";
 import apiService from "../api";
-import parseTodoListData from "../utils/ListParser";
+import { parseTodoListData } from "../utils/ListParser";
 
 export default function TodoList(props) {
-  const { listName } = props;
+  const { activeListName } = props;
 
   const [tasks, setTasks] = useState([]);
   const [isAddItemBoxToggled, setIsAddItemBoxToggled] = useState(false);
 
   useEffect(() => {
-    apiService.FetchDataService.get_table_data(listName).then((response) => {
-      let tasks = parseTodoListData(response);
-      setTasks(tasks);
-    });
-  }, []);
+    apiService.FetchDataService.get_table_data(activeListName).then(
+      (response) => {
+        let tasks = parseTodoListData(response);
+        setTasks(tasks);
+      }
+    );
+  }, [activeListName]);
 
   const handleToggle = (value) => () => {
     const currentIndex = tasks.indexOf(value);
@@ -52,7 +54,7 @@ export default function TodoList(props) {
   };
 
   const addNewItemCallback = (item) => {
-    item = { ...item, list_name: listName };
+    item = { ...item, list_name: activeListName };
     apiService.PersistDataService.persist_list_item(item).then(
       (response) => response.data
     );
