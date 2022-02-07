@@ -43,6 +43,19 @@ class DeleteDataService {
   }
 }
 
-const apiService = { FetchDataService, PersistDataService, DeleteDataService };
+class UpdateDataService {
+  static update_checked_item(checkedItemID) {
+    return $axios.get(url + "/api/test/update_checked_item", {
+      params: { checkedItemID },
+    });
+  }
+}
+
+const apiService = {
+  FetchDataService,
+  PersistDataService,
+  DeleteDataService,
+  UpdateDataService,
+};
 
 export default apiService;

@@ -23,4 +23,5 @@ urlpatterns = [
     path('api/test/get_lists/', views.get_lists),
     path('api/test/persist_new_list/', views.persist_new_list),
     path('api/test/delete_list_items/', views.delete_list_items),
+    path('api/test/update_checked_item/', views.update_checked_item),
 ]

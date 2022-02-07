@@ -36,6 +36,16 @@ def persist_new_list(request):
 
 
 @api_view(['GET'])
+def update_checked_item(request):
+    checked_item_id = request.GET.get('checkedItemID')
+    list_item = TodoListItem.objects.get(id=checked_item_id)
+    list_item.checked = not list_item.checked
+    list_item.save()
+
+    return Response(status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
 @renderer_classes([JSONRenderer])
 def get_table_data(request):
     list_name = request.GET.get('listName')
