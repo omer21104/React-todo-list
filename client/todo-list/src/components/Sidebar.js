@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import AddListBox from "./AddListBox";
 import apiService from "../api";
-import { parseListNames } from "../utils/ListParser";
+import { parse } from "../utils/Parser";
 
 //[ ] need to fetch lists from DB
 //[V] signal parent that a list has been clicked
@@ -15,7 +15,7 @@ const Sidebar = (props) => {
 
   useEffect(() => {
     apiService.FetchDataService.get_lists().then((response) => {
-      setLists(parseListNames(response));
+      setLists(parse(response.data));
     });
   }, []);
 

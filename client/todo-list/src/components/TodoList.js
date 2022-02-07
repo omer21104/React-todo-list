@@ -10,7 +10,7 @@ import Stack from "@mui/material/Stack";
 import { useEffect, useState } from "react";
 import AddItemBox from "./AddItemBox";
 import apiService from "../api";
-import { parseTodoListData } from "../utils/ListParser";
+import { parse } from "../utils/Parser";
 
 export default function TodoList(props) {
   const { activeListName } = props;
@@ -21,7 +21,7 @@ export default function TodoList(props) {
   useEffect(() => {
     apiService.FetchDataService.get_table_data(activeListName).then(
       (response) => {
-        let tasks = parseTodoListData(response);
+        let tasks = parse(response.data);
         setTasks(tasks);
       }
     );
@@ -62,6 +62,10 @@ export default function TodoList(props) {
     });
     setTasks(uncheckedTasks);
 
+    // make sure there are selected tasks to be removed
+    if (selectedTasksIds) {
+      return;
+    }
     apiService.DeleteDataService.delete_list_items(selectedTasksIds).then(
       (response) => response.data
     );
