@@ -20,4 +20,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/test/', views.test),
     path('api/test/get_table_data/', views.get_table_data),
+    path('api/test/get_lists/', views.get_lists),
+    path('api/test/persist_new_list/', views.persist_new_list),
 ]

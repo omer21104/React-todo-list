@@ -1,15 +1,20 @@
 import "./App.css";
 import Sidebar from "./components/Sidebar";
 import TodoList from "./components/TodoList";
+import { useState } from "react";
 
 function App() {
+  const [selectedList, setSelectedList] = useState("");
+
+  const listClickedCallback = (listName) => {
+    setSelectedList(listName);
+  };
+
   return (
     <div className="App">
-      <h1>Todolist:</h1>
-      <main>
-        <TodoList listName={"test"} />
-      </main>
-      <Sidebar />
+      <h1>{selectedList || "hi"}:</h1>
+      <main>{selectedList && <TodoList activeListName={selectedList} />}</main>
+      <Sidebar listClickedCallback={listClickedCallback} />
     </div>
   );
 }

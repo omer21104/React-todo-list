@@ -1,4 +1,4 @@
-const parseTodoListData = (response) => {
+export const parseTodoListData = (response) => {
   const data = JSON.parse(response.data);
 
   return data.map((item) => {
@@ -10,4 +10,14 @@ const parseTodoListData = (response) => {
   });
 };
 
-export default parseTodoListData;
+export const parseListNames = (response) => {
+  const data = JSON.parse(response.data);
+
+  return data.map((item) => {
+    const {
+      pk,
+      fields: { list_name },
+    } = item;
+    return { id: pk, list_name };
+  });
+};
