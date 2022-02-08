@@ -4,9 +4,6 @@ import AddListBox from "./AddListBox";
 import apiService from "../api";
 import { parse } from "../utils/Parser";
 
-//[ ] need to fetch lists from DB
-//[V] signal parent that a list has been clicked
-
 const Sidebar = (props) => {
   const { listClickedCallback } = props;
 
@@ -19,7 +16,7 @@ const Sidebar = (props) => {
     });
   }, []);
 
-  const handleListClicked = (e) => {
+  const handleListClick = (e) => {
     listClickedCallback(e.target.innerHTML);
   };
 
@@ -38,14 +35,14 @@ const Sidebar = (props) => {
       <ul>
         {lists.map((list) => {
           return (
-            <li onClick={handleListClicked} key={list.id}>
+            <li onClick={handleListClick} key={list.id}>
               {list.list_name}
             </li>
           );
         })}
       </ul>
       <Button variant={"contained"} onClick={handleNewListButtonClick}>
-        New list
+        {isAddNewListToggled ? "hide" : "New list"}
       </Button>
       <div>
         {isAddNewListToggled && (

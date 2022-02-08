@@ -112,7 +112,7 @@ export default function TodoList(props) {
       <div>
         <Stack spacing={2} direction="row">
           <Button variant={"contained"} onClick={handleAddClick}>
-            Add new item
+            {isAddItemBoxToggled ? "hide" : "Add new item"}
           </Button>
           <Button variant={"contained"} onClick={handleRemoveClick}>
             Remove selected

@@ -5,7 +5,7 @@ const $axios = Axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
-const url = "http://127.0.0.1:8000/api/new_url_test";
+const url = "http://127.0.0.1:8000/api/todolist";
 
 class FetchDataService {
   static get_table_data(listName) {
