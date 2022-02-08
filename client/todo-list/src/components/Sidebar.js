@@ -2,10 +2,7 @@ import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import AddListBox from "./AddListBox";
 import apiService from "../api";
-import { parseListNames } from "../utils/ListParser";
-
-//[ ] need to fetch lists from DB
-//[V] signal parent that a list has been clicked
+import { parse } from "../utils/Parser";
 
 const Sidebar = (props) => {
   const { listClickedCallback } = props;
@@ -15,11 +12,11 @@ const Sidebar = (props) => {
 
   useEffect(() => {
     apiService.FetchDataService.get_lists().then((response) => {
-      setLists(parseListNames(response));
+      setLists(parse(response.data));
     });
   }, []);
 
-  const handleListClicked = (e) => {
+  const handleListClick = (e) => {
     listClickedCallback(e.target.innerHTML);
   };
 
@@ -38,14 +35,14 @@ const Sidebar = (props) => {
       <ul>
         {lists.map((list) => {
           return (
-            <li onClick={handleListClicked} key={list.id}>
+            <li onClick={handleListClick} key={list.id}>
               {list.list_name}
             </li>
           );
         })}
       </ul>
       <Button variant={"contained"} onClick={handleNewListButtonClick}>
-        New list
+        {isAddNewListToggled ? "hide" : "New list"}
       </Button>
       <div>
         {isAddNewListToggled && (

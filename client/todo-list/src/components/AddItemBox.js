@@ -6,11 +6,11 @@ const AddItemBox = (props) => {
   const { addCallback } = props;
   const [listItemText, setListItemText] = useState("");
 
-  const handleChange = (e) => {
+  const handleItemLabelChange = (e) => {
     setListItemText(e.target.value);
   };
 
-  const handleClick = () => {
+  const handleAddButtonClick = () => {
     const datum = {
       id: uuidv4(),
       list_item_title: listItemText,
@@ -27,14 +27,14 @@ const AddItemBox = (props) => {
         type="text"
         name={"listItemText"}
         value={listItemText}
-        onChange={handleChange}
+        onChange={handleItemLabelChange}
       />
       <Button
         variant={"contained"}
-        onClick={handleClick}
+        onClick={handleAddButtonClick}
         style={{ marginLeft: "10px" }}
       >
-        Add
+        Add!
       </Button>
     </div>
   );
